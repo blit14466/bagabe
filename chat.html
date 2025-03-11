@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - Penpalmega</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header>
+        <h1>Chat Room</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/profile">Profile</a></li>
+                <li><a href="/settings">Settings</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+      <div>
+    <button onclick="sendFriendRequest()">Send Friend Request</button>
+</div>
+<div id="notifications"></div>
+
+        <div id="chat-box"></div>
+        <input id="message-input" type="text" placeholder="Type a message...">
+        <button onclick="sendMessage()">Send</button>
+    </main>
+
+    <footer>
+        <p>Contact us at <a href="mailto:[email protected]">[email protected]</a></p>
+    </footer>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        function sendMessage() {
+            const input = document.getElementById("message-input");
+            const message = input.value;
+            if (message.trim() !== "") {
+                socket.emit("chat message", message);
+                input.value = "";
+            }
+        }
+
+        socket.on("chat message", (msg) => {
+            const chatBox = document.getElementById("chat-box");
+            const messageElement = document.createElement("p");
+            messageElement.textContent = msg;
+            chatBox.appendChild(messageElement);
+        });
+    </script>
+</body>
+</html>
